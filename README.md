@@ -189,3 +189,6 @@ powershell -NoProfile -File scripts/verify-offline.ps1
 ## 範圍
 
 本版依規格維持單機 SSR，未加入圖片上傳、CSV、外部通知、雲端服務、自動派單、公開註冊、完整時間軸或 SPA。所有展示人物與案件皆為虛構。
+## 版本紀錄
+
+- v1.0：完成資訊報修管理系統初始版本。
