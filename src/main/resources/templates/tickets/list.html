@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('案件查詢')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1>案件查詢</h1>
+                <a
+                    th:if="${actor.role.name()=='EMPLOYEE'}"
+                    th:href="@{/tickets/new}"
+                >新增報修</a>
+                <a
+                    th:if="${actor.role.name()=='ENGINEER'}"
+                    th:href="@{/tickets/repairs}"
+                >本人維修紀錄</a>
+                <form
+                    th:action="@{/tickets}"
+                    th:object="${query}"
+                    method="get"
+                >
+                    <div
+                        th:if="${#fields.hasAnyErrors()}"
+                        role="alert"
+                    >
+                        <p
+                            th:each="e:${#fields.allErrors()}"
+                            th:text="${e}"
+                        ></p>
+                    </div>
+                    <label>標題／單號
+                        <input
+                            th:field="*{keyword}"
+                            maxlength="100"
+                        >
+                    </label>
+                    <label>狀態<select th:field="*{status}">
+                            <option value="">全部</option>
+                            <option
+                                th:each="s:${statuses}"
+                                th:value="${s}"
+                                th:text="${s.label}"
+                            ></option>
+                        </select>
+                    </label>
+                    <label>故障分類<select th:field="*{categoryId}">
+                            <option value="">全部</option>
+                            <option
+                                th:each="c:${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}"
+                            ></option>
+                        </select>
+                    </label>
+                    <label>起始日期
+                        <input
+                            type="date"
+                            th:field="*{from}"
+                        >
+                    </label>
+                    <label>結束日期
+                        <input
+                            type="date"
+                            th:field="*{to}"
+                        >
+                    </label>
+                    <label>每頁筆數
+                        <input
+                            type="number"
+                            th:field="*{size}"
+                            min="1"
+                            max="100"
+                        >
+                    </label>
+                    <input
+                        th:if="${query.engineerId!=null}"
+                        type="hidden"
+                        name="engineerId"
+                        th:value="${query.engineerId}"
+                    >
+                    <button>查詢</button>
+                    <a th:href="@{/tickets}">清除篩選</a>
+                </form>
+                <p th:text="${'共 '+items.totalElements+' 筆'}"></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>單號</th>
+                            <th>標題</th>
+                            <th>分類</th>
+                            <th>狀態</th>
+                            <th>緊急程度</th>
+                            <th>申請人</th>
+                            <th>工程師</th>
+                            <th>報修時間</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="t:${items.content}">
+                            <td><a
+                                    th:href="@{/tickets/{id}(id=${t.id})}"
+                                    th:text="${t.ticketNo}"
+                                ></a></td>
+                            <td th:text="${t.title}"></td>
+                            <td th:text="${t.categoryName}"></td>
+                            <td><span
+                                    class="status"
+                                    th:classappend="${t.status}"
+                                    th:text="${t.status.label}"
+                                ></span></td>
+                            <td th:text="${t.priority.label}"></td>
+                            <td th:text="${t.requesterName}"></td>
+                            <td th:text="${t.engineerName}"></td>
+                            <td th:text="${t.createdDisplay}"></td>
+                        </tr>
+                        <tr th:if="${items.empty}">
+                            <td colspan="8">目前沒有符合條件的案件。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <nav aria-label="分頁">
+                    <a
+                        th:if="${items.hasPrevious()}"
+                        th:href="@{/tickets(page=${items.number-1},size=${query.size},keyword=${query.keyword},status=${query.status},categoryId=${query.categoryId},engineerId=${query.engineerId},from=${query.from},to=${query.to})}"
+                    >上一頁</a>
+                    <span
+                        th:text="${'第 '+(items.totalPages==0?0:items.number+1)+' / '+items.totalPages+' 頁'}"
+                    ></span>
+                    <a
+                        th:if="${items.hasNext()}"
+                        th:href="@{/tickets(page=${items.number+1},size=${query.size},keyword=${query.keyword},status=${query.status},categoryId=${query.categoryId},engineerId=${query.engineerId},from=${query.from},to=${query.to})}"
+                    >下一頁</a>
+                </nav>
+                <a th:href="@{/dashboard}">返回首頁</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

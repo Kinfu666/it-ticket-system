@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('案件詳情')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1 th:text="${ticket.title}"></h1>
+                <p
+                    th:if="${success}"
+                    th:text="${success}"
+                ></p>
+                <dl>
+                    <dt>單號</dt>
+                    <dd th:text="${ticket.ticketNo}"></dd>
+                    <dt>狀態</dt>
+                    <dd>
+                        <span
+                            class="status"
+                            th:classappend="${ticket.status}"
+                            th:text="${ticket.status.label}"
+                        ></span>
+                    </dd>
+                    <dt>分類</dt>
+                    <dd th:text="${ticket.categoryName}"></dd>
+                    <dt>緊急程度</dt>
+                    <dd th:text="${ticket.priority.label}"></dd>
+                    <dt>位置</dt>
+                    <dd th:text="${ticket.location}"></dd>
+                    <dt>申請人</dt>
+                    <dd th:text="${ticket.requesterName}"></dd>
+                    <dt>工程師</dt>
+                    <dd th:text="${ticket.engineerName}"></dd>
+                    <dt>報修時間</dt>
+                    <dd th:text="${ticket.createdDisplay}"></dd>
+                    <dt>更新時間</dt>
+                    <dd th:text="${ticket.updatedDisplay}"></dd>
+                    <dt>結案時間</dt>
+                    <dd th:text="${ticket.closedDisplay}"></dd>
+                    <dt>故障描述</dt>
+                    <dd
+                        class="multiline"
+                        th:text="${ticket.description}"
+                    ></dd>
+                    <dt th:if="${ticket.returnReason}">最近退回原因</dt>
+                    <dd
+                        class="multiline"
+                        th:if="${ticket.returnReason}"
+                        th:text="${ticket.returnReason}"
+                    ></dd>
+                </dl>
+                <section th:replace="~{tickets/actions :: actions}"></section>
+                <section th:replace="~{tickets/repairs :: records}"></section>
+                <a th:href="@{/tickets}">返回案件列表</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

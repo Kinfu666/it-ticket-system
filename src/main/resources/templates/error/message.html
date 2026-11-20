@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('操作未完成')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1 th:text="${code}">錯誤</h1>
+                <p
+                    th:text="${message}"
+                    role="alert"
+                ></p>
+                <a th:href="@{/dashboard}">返回首頁</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <body>
+        <aside
+            th:fragment="sidebar"
+            class="sidebar"
+        >
+            <a
+                class="brand"
+                th:href="@{/dashboard}"
+            >
+                <span class="brand-mark">H</span>
+                <span>Helpdesk<small>IT SERVICE DESK</small>
+                </span>
+            </a>
+            <p class="nav-label">工作空間</p>
+            <nav aria-label="主要選單">
+                <a th:href="@{/dashboard}">
+                    <span class="nav-icon">▦</span>總覽
+                </a>
+                <a
+                    th:if="${actor.role.name()=='EMPLOYEE'}"
+                    th:href="@{/tickets/new}"
+                >
+                    <span class="nav-icon">＋</span>新增報修
+                </a>
+                <a th:href="@{/tickets}">
+                    <span class="nav-icon">▤</span>
+                    <span
+                        th:text="${actor.role.name()=='ADMIN'?'全部案件':(actor.role.name()=='EMPLOYEE'?'我的案件':'我的維修')}"
+                    ></span>
+                </a>
+                <a
+                    th:if="${actor.role.name()=='ENGINEER'}"
+                    th:href="@{/tickets/repairs}"
+                >
+                    <span class="nav-icon">↺</span>本人維修紀錄
+                </a>
+                <a
+                    th:if="${actor.role.name()=='ADMIN'}"
+                    th:href="@{/admin/users}"
+                >
+                    <span class="nav-icon">▣</span>帳號管理
+                </a>
+                <a
+                    th:if="${actor.role.name()=='ADMIN'}"
+                    th:href="@{/admin/departments}"
+                >
+                    <span class="nav-icon">▥</span>部門管理
+                </a>
+                <a
+                    th:if="${actor.role.name()=='ADMIN'}"
+                    th:href="@{/admin/categories}"
+                >
+                    <span class="nav-icon">◇</span>故障分類
+                </a>
+                <a
+                    th:if="${actor.role.name()=='ADMIN'}"
+                    th:href="@{/admin/reports}"
+                >
+                    <span class="nav-icon">▥</span>統計報表
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <p class="nav-label">帳戶</p>
+                <a th:href="@{/profile/password}">個人設定 · 修改密碼</a>
+                <form
+                    th:action="@{/logout}"
+                    method="post"
+                >
+                    <button class="logout-button">安全登出 ↗</button>
+                </form>
+                <small>LOCAL SYSTEM · 離線可用</small>
+            </div>
+        </aside>
+    </body>
+</html>

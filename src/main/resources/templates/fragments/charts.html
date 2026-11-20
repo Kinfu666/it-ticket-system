@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <body>
+        <section
+            th:fragment="categories"
+            class="panel"
+        >
+            <div class="section-heading">
+                <h2>故障分類分布</h2>
+                <span class="muted">依實際案件數統計</span>
+            </div>
+            <div
+                th:each="c:${data.categories}"
+                class="bar-row"
+            >
+                <div>
+                    <span th:text="${c.name}"></span>
+                    <strong th:text="${c.total+' 件'}"></strong>
+                </div>
+                <div class="bar-track">
+                    <div
+                        class="bar-fill"
+                        th:style="${'width: '+(100.0*c.total/data.maxCategory)+'%'}"
+                    ></div>
+                </div>
+            </div>
+            <p th:if="${#lists.isEmpty(data.categories)}">尚無分類資料。</p>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('帳號管理')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1>帳號管理</h1>
+                <p
+                    th:if="${success}"
+                    th:text="${success}"
+                ></p>
+                <a th:href="@{/admin/users/new}">新增帳號</a>
+                <form
+                    th:action="@{/admin/users}"
+                    method="get"
+                >
+                    <label>部門<select name="departmentId">
+                            <option value="">全部部門</option>
+                            <option
+                                th:each="d:${departments}"
+                                th:value="${d.id}"
+                                th:text="${d.name}"
+                                th:selected="${d.id == departmentId}"
+                            ></option>
+                        </select>
+                    </label>
+                    <button>查詢</button>
+                </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>帳號</th>
+                            <th>姓名</th>
+                            <th>角色</th>
+                            <th>部門</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u:${items}">
+                            <td th:text="${u.username}"></td>
+                            <td th:text="${u.fullName}"></td>
+                            <td th:text="${u.role.label}"></td>
+                            <td th:text="${u.departmentName}"></td>
+                            <td th:text="${u.enabled?'啟用':'停用'}"></td>
+                            <td>
+                                <a th:href="@{/admin/users/{id}/edit(id=${u.id})}">修改</a><a
+                                    th:if="${u.role.name() == 'ENGINEER'}"
+                                    th:href="@{/tickets(engineerId=${u.id})}"
+                                >負責案件</a>
+                                <form
+                                    th:action="@{/admin/users/{id}/enabled(id=${u.id})}"
+                                    method="post"
+                                ><input
+                                        type="hidden"
+                                        name="enabled"
+                                        th:value="${!u.enabled}"
+                                    ><button th:text="${u.enabled?'停用':'啟用'}"></button></form></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a th:href="@{/dashboard}">返回首頁</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

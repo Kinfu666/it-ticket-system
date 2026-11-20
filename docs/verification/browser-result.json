@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "ticketUrl": "http://127.0.0.1:18080/tickets/13",
+  "title": "瀏覽器驗收開機異常 1794836702385",
+  "snapshot": {
+    "ticketCount": 14,
+    "userCount": 6,
+    "departmentCount": 5,
+    "categoryCount": 5
+  },
+  "checked": [
+    "three roles",
+    "full workflow",
+    "reject and repair twice",
+    "cancel",
+    "ownership 403",
+    "search",
+    "department create",
+    "user create/disable",
+    "logout",
+    "mobile",
+    "local resources"
+  ],
+  "pageErrors": [],
+  "externalRequests": []
+}

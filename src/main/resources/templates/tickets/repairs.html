@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('本人維修紀錄')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1>本人維修紀錄</h1>
+                <section th:fragment="records">
+                    <h2>歷次維修紀錄</h2>
+                    <p th:if="${#lists.isEmpty(records)}">尚無維修紀錄。</p>
+                    <article
+                        th:each="r:${records}"
+                        class="repair-card"
+                    >
+                        <h3 th:text="${r.title}"></h3>
+                        <p th:text="${r.ticketNo+'｜'+r.engineerName+'｜'+r.createdDisplay}"></p>
+                        <dl>
+                            <dt>故障原因</dt>
+                            <dd
+                                class="multiline"
+                                th:text="${r.cause}"
+                            ></dd>
+                            <dt>處理方式</dt>
+                            <dd
+                                class="multiline"
+                                th:text="${r.solution}"
+                            ></dd>
+                            <dt>維修結果</dt>
+                            <dd
+                                class="multiline"
+                                th:text="${r.result}"
+                            ></dd>
+                        </dl>
+                    </article>
+                </section>
+                <a th:href="@{/tickets}">返回案件列表</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

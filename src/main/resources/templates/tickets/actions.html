@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <body>
+        <section
+            th:fragment="actions"
+            class="actions"
+        >
+            <h2 th:if="${ticket.status.name()!='CLOSED' and ticket.status.name()!='CANCELLED'}">案件操作
+            </h2>
+            <form
+                th:if="${actor.role.name()=='ADMIN' and (ticket.status.name()=='PENDING' or ticket.status.name()=='ASSIGNED' or ticket.status.name()=='IN_PROGRESS')}"
+                th:action="@{/tickets/{id}/assign(id=${ticket.id})}"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="version"
+                    th:value="${ticket.version}"
+                >
+                <label>指定工程師<select
+                        name="engineerId"
+                        required
+                    >
+                        <option value="">請選擇工程師</option>
+                        <option
+                            th:each="e:${engineers}"
+                            th:value="${e.id}"
+                            th:text="${e.fullName}"
+                            th:selected="${e.id==ticket.engineerId}"
+                        ></option>
+                    </select>
+                </label>
+                <button>分派／重新分派</button>
+            </form>
+            <form
+                th:if="${actor.role.name()=='ENGINEER' and ticket.status.name()=='ASSIGNED'}"
+                th:action="@{/tickets/{id}/start(id=${ticket.id})}"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="version"
+                    th:value="${ticket.version}"
+                >
+                <button>開始維修</button>
+            </form>
+            <form
+                th:if="${actor.role.name()=='ENGINEER' and ticket.status.name()=='IN_PROGRESS'}"
+                th:action="@{/tickets/{id}/resolve(id=${ticket.id})}"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="version"
+                    th:value="${ticket.version}"
+                >
+                <label>故障原因
+                    <textarea
+                        name="cause"
+                        required
+                        maxlength="2000"
+                        rows="3"
+                    ></textarea>
+                </label>
+                <label>處理方式
+                    <textarea
+                        name="solution"
+                        required
+                        maxlength="2000"
+                        rows="3"
+                    ></textarea>
+                </label>
+                <label>維修結果
+                    <textarea
+                        name="result"
+                        required
+                        maxlength="2000"
+                        rows="3"
+                    ></textarea>
+                </label>
+                <button>提交維修完成</button>
+            </form>
+            <form
+                th:if="${actor.role.name()=='EMPLOYEE' and ticket.status.name()=='PENDING'}"
+                th:action="@{/tickets/{id}/cancel(id=${ticket.id})}"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="version"
+                    th:value="${ticket.version}"
+                >
+                <button class="danger">取消報修</button>
+            </form>
+            <div th:if="${actor.role.name()=='EMPLOYEE' and ticket.status.name()=='RESOLVED'}">
+                <p class="notice">請確認設備是否已恢復正常，或填寫原因退回維修。</p>
+                <form
+                    th:action="@{/tickets/{id}/confirm(id=${ticket.id})}"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="version"
+                        th:value="${ticket.version}"
+                    >
+                    <button>確認修復並結案</button>
+                </form>
+                <form
+                    th:action="@{/tickets/{id}/reject(id=${ticket.id})}"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="version"
+                        th:value="${ticket.version}"
+                    >
+                    <label>退回原因
+                        <textarea
+                            name="reason"
+                            required
+                            maxlength="2000"
+                            rows="3"
+                        ></textarea>
+                    </label>
+                    <button class="danger">退回重新處理</button>
+                </form>
+            </div>
+        </section>
+    </body>
+</html>

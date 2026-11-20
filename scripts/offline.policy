@@ -1,0 +1,22 @@
+// 僅驗收使用：允許本機 HTTP，拒絕其餘 socket。不是應用程式正式設定。
+grant {
+ permission java.io.FilePermission "<<ALL FILES>>", "read,write,delete,execute,readlink";
+ permission java.util.PropertyPermission "*", "read,write";
+ permission java.lang.RuntimePermission "*";
+ permission java.lang.reflect.ReflectPermission "*";
+ permission java.security.SecurityPermission "*";
+ permission javax.security.auth.AuthPermission "*";
+ permission javax.management.MBeanServerPermission "*";
+ permission javax.management.MBeanPermission "*", "*";
+ permission javax.management.MBeanTrustPermission "*";
+ permission java.lang.management.ManagementPermission "monitor";
+ permission java.lang.management.ManagementPermission "control";
+ permission javax.net.ssl.SSLPermission "*";
+ permission java.sql.SQLPermission "*";
+ permission org.hibernate.validator.HibernateValidatorPermission "accessPrivateMembers";
+ permission jakarta.el.ELPermission "*";
+ permission java.net.NetPermission "*";
+ permission java.net.SocketPermission "127.0.0.1:0-", "connect,accept,listen,resolve";
+ permission java.net.SocketPermission "localhost:0-", "connect,accept,listen,resolve";
+ permission java.net.SocketPermission "[::1]:0-", "connect,accept,listen,resolve";
+};

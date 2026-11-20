@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('新增報修')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1>新增報修</h1>
+                <form
+                    th:action="@{/tickets}"
+                    th:object="${form}"
+                    method="post"
+                >
+                    <div
+                        th:if="${#fields.hasAnyErrors()}"
+                        role="alert"
+                    >
+                        <p
+                            th:each="e:${#fields.allErrors()}"
+                            th:text="${e}"
+                        ></p>
+                    </div>
+                    <label>標題
+                        <input
+                            th:field="*{title}"
+                            required
+                            maxlength="100"
+                        >
+                    </label>
+                    <label>故障分類<select
+                            th:field="*{categoryId}"
+                            required
+                        >
+                            <option value="">請選擇</option>
+                            <option
+                                th:each="c:${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}"
+                            ></option>
+                        </select>
+                    </label>
+                    <label>位置
+                        <input
+                            th:field="*{location}"
+                            required
+                            maxlength="100"
+                        >
+                    </label>
+                    <label>緊急程度<select th:field="*{priority}">
+                            <option
+                                th:each="p:${priorities}"
+                                th:value="${p}"
+                                th:text="${p.label}"
+                            ></option>
+                        </select>
+                    </label>
+                    <label>故障描述
+                        <textarea
+                            th:field="*{description}"
+                            required
+                            maxlength="2000"
+                            rows="6"
+                        ></textarea>
+                    </label>
+                    <button>送出申請</button>
+                </form>
+                <a th:href="@{/tickets}">返回列表</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

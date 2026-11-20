@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('服務總覽')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow blue">SERVICE OVERVIEW</span>
+                        <h1 th:text="${actor.fullName+'，您好'}"></h1>
+                        <p class="muted">掌握報修進度，讓工作順暢運行。</p>
+                    </div>
+                    <a
+                        class="button-link"
+                        th:if="${actor.role.name()=='EMPLOYEE'}"
+                        th:href="@{/tickets/new}"
+                    >＋ 新增報修</a>
+                    <a
+                        class="button-link"
+                        th:unless="${actor.role.name()=='EMPLOYEE'}"
+                        th:href="@{/tickets}"
+                    >查看案件 ↗</a>
+                </div>
+                <p
+                    class="notice"
+                    th:if="${actor.role.name()=='EMPLOYEE' and data.awaitingConfirmation>0}"
+                >
+                    <a
+                        th:href="@{/tickets(status='RESOLVED')}"
+                        th:text="${'您有 '+data.awaitingConfirmation+' 件維修完成的案件待確認，請驗收修復結果。'}"
+                    ></a>
+                </p>
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <span class="caption">案件總數</span>
+                        <strong
+                            class="number"
+                            th:text="${data.total}"
+                        ></strong>
+                        <small class="muted">您有權限查看的所有案件</small>
+                    </article>
+                    <article class="stat-card">
+                        <span class="caption">未完成案件</span>
+                        <strong
+                            class="number"
+                            th:text="${data.active}"
+                        ></strong>
+                        <small class="muted">待分派至待確認的案件</small>
+                    </article>
+                    <article class="stat-card">
+                        <span class="caption">待確認案件</span>
+                        <strong
+                            class="number"
+                            th:text="${data.awaitingConfirmation}"
+                        ></strong>
+                        <small class="muted">等待申請人確認修復</small>
+                    </article>
+                </div>
+                <div class="status-grid">
+                    <a
+                        class="status-card"
+                        th:each="s:${data.statuses}"
+                        th:href="@{/tickets(status=${s.status})}"
+                    >
+                        <span
+                            class="status"
+                            th:classappend="${s.status}"
+                            th:text="${s.status.label}"
+                        ></span>
+                        <strong th:text="${s.total}"></strong>
+                    </a>
+                </div>
+                <section class="panel">
+                    <div class="section-heading">
+                        <h2>近期案件</h2>
+                        <a th:href="@{/tickets}">查看全部 →</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>案件單號</th>
+                                <th>報修標題</th>
+                                <th>狀態</th>
+                                <th>緊急程度</th>
+                                <th>報修時間</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="t:${data.recent}">
+                                <td><a
+                                        th:href="@{/tickets/{id}(id=${t.id})}"
+                                        th:text="${t.ticketNo}"
+                                    ></a></td>
+                                <td th:text="${t.title}"></td>
+                                <td><span
+                                        class="status"
+                                        th:classappend="${t.status}"
+                                        th:text="${t.status.label}"
+                                    ></span></td>
+                                <td th:text="${t.priority.label}"></td>
+                                <td th:text="${t.createdDisplay}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(data.recent)}">
+                                <td colspan="5">目前沒有案件。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section th:if="${actor.role.name()=='ADMIN'}">
+                    <div th:replace="~{fragments/charts :: categories}"></div>
+                </section>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

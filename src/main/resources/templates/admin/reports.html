@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('統計報表')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <div class="page-heading">
+                    <div>
+                        <span class="eyebrow blue">SERVICE ANALYTICS</span>
+                        <h1>統計報表</h1>
+                        <p class="muted">依目前資料庫中的全部案件即時計算</p>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <span class="caption">案件總數</span>
+                        <strong
+                            class="number"
+                            th:text="${data.total}"
+                        ></strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="caption">未完成案件</span>
+                        <strong
+                            class="number"
+                            th:text="${data.active}"
+                        ></strong>
+                    </article>
+                    <article class="stat-card">
+                        <span class="caption">待申請人確認</span>
+                        <strong
+                            class="number"
+                            th:text="${data.awaitingConfirmation}"
+                        ></strong>
+                    </article>
+                </div>
+                <section th:replace="~{fragments/charts :: categories}"></section>
+                <section class="panel">
+                    <h2>案件狀態統計</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>狀態</th>
+                                <th>案件數</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s:${data.statuses}">
+                                <td><span
+                                        class="status"
+                                        th:classappend="${s.status}"
+                                        th:text="${s.status.label}"
+                                    ></span></td>
+                                <td th:text="${s.total}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

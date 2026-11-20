@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "preserved": {
+    "ticketCount": 14,
+    "userCount": 6,
+    "departmentCount": 5,
+    "categoryCount": 5
+  },
+  "ticketUrl": "http://127.0.0.1:18080/tickets/13",
+  "repairRecords": 2,
+  "noDuplicateDemo": true,
+  "externalRequests": []
+}

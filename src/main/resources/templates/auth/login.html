@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('登入')}"></head>
+    <body class="login-page">
+        <section class="login-brand">
+            <div class="brand">
+                <span class="brand-mark">H</span>
+                <span>Helpdesk<small>IT SERVICE DESK</small>
+                </span>
+            </div>
+            <h2>讓資訊服務，
+                <br>成為工作的助力。
+            </h2>
+            <p>從提出報修、分派維修到確認修復，
+                <br>每一個案件都有清楚的進度。
+            </p>
+            <small>IT HELPDESK SYSTEM · LOCAL EDITION</small>
+        </section>
+        <section class="login-panel">
+            <main>
+                <span class="eyebrow blue">WELCOME BACK</span>
+                <h1>登入工作空間</h1>
+                <p class="muted">本機資訊報修服務，請使用您的內部帳號登入。</p>
+                <p
+                    th:if="${param.error}"
+                    role="alert"
+                >帳號或密碼錯誤，或帳號已停用。</p>
+                <p
+                    th:if="${param.changed}"
+                    role="alert"
+                >帳號權限已變更，請重新登入。</p>
+                <p
+                    th:if="${param.logout}"
+                    class="success-message"
+                >您已安全登出。</p>
+                <p
+                    th:if="${param.passwordChanged}"
+                    class="success-message"
+                >密碼已更新，請重新登入。</p>
+                <form
+                    th:action="@{/login}"
+                    method="post"
+                >
+                    <label>帳號
+                        <input
+                            name="username"
+                            required
+                            maxlength="50"
+                            autocomplete="username"
+                            placeholder="請輸入帳號"
+                            autofocus
+                        >
+                    </label>
+                    <label>密碼
+                        <input
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            placeholder="請輸入密碼"
+                        >
+                    </label>
+                    <button type="submit">登入 →</button>
+                </form>
+                <p class="muted">帳號由系統管理員建立，如需協助請洽內部資訊人員。</p>
+            </main>
+            <small>安全登入 · 本機 Session · 離線可用</small>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:replace="~{fragments/header :: head('資料管理')}"></head>
+    <body>
+        <th:block th:if="${actor != null}">
+            <aside th:replace="~{fragments/sidebar :: sidebar}"></aside>
+        </th:block>
+        <div
+            class="workspace"
+            th:classappend="${actor==null}?'guest'"
+        >
+            <th:block th:if="${actor != null}">
+                <header th:replace="~{fragments/header :: header}"></header>
+            </th:block>
+            <main class="page-content">
+                <h1 th:text="${label+'管理'}"></h1>
+                <p
+                    th:if="${success}"
+                    th:text="${success}"
+                ></p>
+                <a
+                    th:href="@{/admin/{kind}/new(kind=${kind})}"
+                    th:text="${'新增'+label}"
+                ></a>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>名稱</th>
+                            <th th:if="${kind=='categories'}">說明</th>
+                            <th>狀態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item:${items}">
+                            <td th:text="${item.name}"></td>
+                            <td
+                                th:if="${kind=='categories'}"
+                                th:text="${item.description}"
+                            ></td>
+                            <td th:text="${item.enabled?'啟用':'停用'}"></td>
+                            <td><a th:href="@{/admin/{kind}/{id}/edit(kind=${kind},id=${item.id})}">
+                                    修改</a><a
+                                    th:if="${kind=='departments'}"
+                                    th:href="@{/admin/users(departmentId=${item.id})}"
+                                >部門員工</a><form
+                                    th:action="@{/admin/{kind}/{id}/enabled(kind=${kind},id=${item.id})}"
+                                    method="post"
+                                ><input
+                                        type="hidden"
+                                        name="enabled"
+                                        th:value="${!item.enabled}"
+                                    ><button th:text="${item.enabled?'停用':'啟用'}"></button></form></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a th:href="@{/dashboard}">返回首頁</a>
+            </main>
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </body>
+</html>

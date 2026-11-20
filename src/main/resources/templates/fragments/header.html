@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html
+    lang="zh-Hant"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head th:fragment="head(title)">
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        >
+        <title th:text="${title+'｜IT Helpdesk'}"></title>
+        <link
+            rel="stylesheet"
+            th:href="@{/vendor/bootstrap/bootstrap.min.css}"
+        >
+        <link
+            rel="stylesheet"
+            th:href="@{/css/app.css}"
+        >
+        <script
+            defer
+            th:src="@{/vendor/bootstrap/bootstrap.bundle.min.js}"
+        ></script>
+    </head>
+    <body>
+        <header
+            th:fragment="header"
+            class="topbar"
+        >
+            <div>
+                <span class="eyebrow">INTERNAL SUPPORT PORTAL</span>
+                <strong>資訊報修管理系統</strong>
+            </div>
+            <div class="user-summary">
+                <span
+                    class="avatar"
+                    th:text="${#strings.substring(actor.fullName,0,1)}"
+                ></span>
+                <div>
+                    <strong th:text="${actor.fullName}"></strong>
+                    <small th:text="${actor.departmentName+' · '+actor.role.label}"></small>
+                </div>
+            </div>
+        </header>
+    </body>
+</html>
